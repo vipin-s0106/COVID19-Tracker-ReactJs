@@ -15,6 +15,10 @@ import Table from './Table';
 import {sortData, prettyPrintStat} from './util';
 import LineGraph from './LineGraph';
 import "leaflet/dist/leaflet.css";
+import earth from './earth.jpg';
+import corona from './corona.jpg';
+
+//https://covid-19-tracker-be1b8.web.app/
 
 
 function App() {
@@ -54,7 +58,8 @@ function App() {
         const countries = data.map((country) => (
           {
             name: country.country,//USA, India
-            value: country.countryInfo.iso2 // UK, USA, FR
+            value: country.countryInfo.iso2, // UK, USA, FR
+            flag: country.countryInfo.flag
           }
         ));
 
@@ -90,7 +95,7 @@ function App() {
         setMapZoom(2);
       }else{
         setMapCenter([data.countryInfo.lat,data.countryInfo.long])
-        setMapZoom(2);
+        setMapZoom(4);
       }
 
       
@@ -105,10 +110,10 @@ function App() {
           <h2>COVID-19 TRACKER</h2>
           <FormControl className="app__dropdown">
             <Select variant="outlined" value={country} onChange={onCountryChange}>
-              <MenuItem value="worldwide">Worldwide</MenuItem>
+              <MenuItem value="worldwide"><img className="dropdown__flag" src={earth} />Worldwide</MenuItem>
               {
                 countries.map((country) =>{
-                  return <MenuItem value={country.value}>{country.name}</MenuItem>
+                  return <MenuItem value={country.value}><img className="dropdown__flag" src={country.flag} />{country.name}</MenuItem>
                 })
               }
             </Select>
@@ -119,7 +124,8 @@ function App() {
               isRed
               active={casesType === "cases"}
               onClick={e => setCasesType('cases')}
-              title="Coronavirus Cases" 
+              title="Confirmed Cases" 
+              casesType="cases"
               total={prettyPrintStat(countryInfo.todayCases)} 
               cases={prettyPrintStat(countryInfo.cases)}
             />
@@ -127,6 +133,7 @@ function App() {
               active={casesType === "recovered"}
               onClick={e => setCasesType('recovered')}
               title="Recovered" 
+              casesType="recovered"
               total={prettyPrintStat(countryInfo.todayRecovered)} 
               cases={prettyPrintStat(countryInfo.recovered)}
             />
@@ -134,7 +141,8 @@ function App() {
               isRed
               active={casesType === "deaths"}
               onClick={e => setCasesType('deaths')}
-              title="Deaths" 
+              title="Deaths"
+              casesType="deaths"
               total={prettyPrintStat(countryInfo.todayDeaths)} 
               cases={prettyPrintStat(countryInfo.deaths)}
             />   
@@ -149,8 +157,8 @@ function App() {
         <CardContent>
           <h4>Live cases by Country</h4>
           <Table countries={tableData} />
-          <h4>Worldwide new {casesType}</h4>
-          <LineGraph casesType={casesType} />
+          <h4 className="graph__title">Worldwide new {casesType}</h4>
+          <LineGraph className="app__graph" casesType={casesType} />
         </CardContent>
       </Card>
     </div>
