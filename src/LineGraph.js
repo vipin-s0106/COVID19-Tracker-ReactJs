@@ -1,6 +1,7 @@
 import React, {useState,useEffect} from 'react'
 import { Line } from 'react-chartjs-2';
 import numeral from "numeral";
+import './LineGraph.css';
 
 const options = {
     legend: {
@@ -46,27 +47,30 @@ const options = {
     }
 }
 
+const buildChartData = (data,caseType) =>{
+    // console.log(typeof data)
+    const charData = [];
+    let lastDataPoint;
+    for(let date in data.cases){
+        if(lastDataPoint){
+            const newDataPoint = {
+                x:date,
+                y:data[caseType][date] - lastDataPoint
+            }
+            charData.push(newDataPoint);
+        }
+        lastDataPoint = data[caseType][date];
+    }
+    return charData;
+}
 
-function LineGraph() {
+
+
+function LineGraph({casesType}) {
 
     const [data, setData] = useState({})
 
-    const buildChartData = (data,caseType='cases') =>{
-        // console.log(typeof data)
-        const charData = [];
-        let lastDataPoint;
-        for(let date in data.cases){
-            if(lastDataPoint){
-                const newDataPoint = {
-                    x:date,
-                    y:data[caseType][date] - lastDataPoint
-                }
-                charData.push(newDataPoint);
-            }
-            lastDataPoint = data[caseType][date];
-        }
-        return charData;
-    }
+    
 
     useEffect(() =>{
         const fetchData = async () => {
@@ -74,18 +78,18 @@ function LineGraph() {
             .then(response => response.json())
             .then((data) =>{
                 // console.log(data)
-                const charData = buildChartData(data,"cases")
+                const charData = buildChartData(data,casesType)
                 setData(charData);
             });
         }
         fetchData();
         
-    },[])
+    },[casesType])
 
 
     
     return (
-        <div>
+        <div className="graph">
             {data ?.length > 0 && (
                 <Line
                 options={options}

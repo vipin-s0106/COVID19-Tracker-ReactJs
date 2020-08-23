@@ -1,5 +1,6 @@
 import React from 'react'
 import './Table.css'
+import numeral from "numeral";
 
 function Table({countries}) {
     return (
@@ -7,8 +8,10 @@ function Table({countries}) {
             {
                 countries.map(country =>(
                     <tr>
-                        <td>{country.country}</td>
-                        <td>{country.cases}</td>
+                        <td>
+                            <img className="country__flag" src={country.countryInfo.flag} />{country.country}
+                        </td>
+                        <td>{numeral(country.cases).format("0,0")}</td>
                     </tr>
                 ))
             }

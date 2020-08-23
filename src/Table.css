@@ -14,10 +14,17 @@
 }
 
 .table td{
-    padding: 0.5rem;
+    padding: 0.4rem;
 }
 
 
 .table tr:nth-of-type(odd){
     background-color: #f3f2f8;
+}
+
+.country__flag{
+    height:18px;
+    width:30px;
+    margin-right:5px;
+    border-radius: 3px;
 }
